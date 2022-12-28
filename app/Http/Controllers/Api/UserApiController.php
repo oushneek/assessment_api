@@ -9,6 +9,7 @@ use App\Models\UserApi;
 use Dflydev\DotAccessData\Exception\DataException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserApiController extends Controller
 {
@@ -79,5 +80,56 @@ class UserApiController extends Controller
      * @param  \App\Models\UserApi  $userApi
      * @return \Illuminate\Http\Response
      */
-    
+    public function edit(UserApi $userApi)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\UserApi  $userApi
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdateUserRequest $request, $id)
+    {
+        if($userApi=UserApi::find($id)){
+            $userApi->update($request->all());
+            return response()->json([
+                'status' => true,
+                'message' => "User Updated successfully!",
+                'user' => $userApi
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'error message' => "Not Found",
+            ], 400);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\UserApi  $userApi
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        if($userApi=UserApi::find($id)){
+            $userApi->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => "User Deleted successfully!",
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'error message' => "Not Found",
+            ], 400);
+        }
+
+    }
 }
